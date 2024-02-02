@@ -1,51 +1,27 @@
-#Module      : LABEL
-#Description : Terraform label module variables
 variable "name" {
   type        = string
   default     = ""
   description = "Name  (e.g. `app` or `cluster`)."
 }
-
 variable "repository" {
   type        = string
-  default     = ""
-  description = ""
+  default     = "https://github.com/cypik/terraform-aws-iam-role"
+  description = "Terraform current module repo"
 }
-
 variable "environment" {
   type        = string
   default     = ""
   description = "Environment (e.g. `prod`, `dev`, `staging`)."
 }
-
-variable "label_order" {
-  type        = list(any)
-  default     = []
-  description = "Label order, e.g. `name`,`application`."
-}
-
-variable "attributes" {
-  type        = list(any)
-  default     = []
-  description = "Additional attributes (e.g. `1`)."
-}
-
-variable "delimiter" {
-  type        = string
-  default     = "-"
-  description = "Delimiter to be used between `organization`, `environment`, `name` and `attributes`."
-}
-
-variable "tags" {
-  type        = map(any)
-  default     = {}
-  description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
-}
-
 variable "managedby" {
   type        = string
-  default     = ""
-  description = ""
+  default     = "cypik"
+  description = "ManagedBy, eg 'cypik'"
+}
+variable "label_order" {
+  type        = list(any)
+  default     = ["name", "environment"]
+  description = "Label order, e.g. `name`,`application`."
 }
 
 # Module      : Iam Role
@@ -58,6 +34,7 @@ variable "enabled" {
 
 variable "assume_role_policy" {
   description = "Whether to create Iam role."
+  type        = any
   sensitive   = true
 }
 
@@ -99,8 +76,9 @@ variable "permissions_boundary" {
 
 variable "policy" {
   default     = null
-  description = "The policy document."
   sensitive   = true
+  type        = any
+  description = "The policy document."
 }
 
 variable "policy_enabled" {
