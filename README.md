@@ -2,25 +2,51 @@
 
 
 <h1 align="center">
-    Terraform AWS IAM ROLE
+    Terraform AWS   IAM-ROLE
 </h1>
 
 <p align="center" style="font-size: 1.2rem;">
-    Terraform module to create IAM ROLE resource on AWS.
+    Terraform module to create vpc-peering resource on AWS.
      </p>
 
 <p align="center">
 
 <a href="https://www.terraform.io">
-  <img src="https://img.shields.io/badge/Terraform-v1.1.7-green" alt="Terraform">
+  <img src="https://img.shields.io/badge/Terraform-v1.7.0-green" alt="Terraform">
 </a>
-<a href="LICENSE.md">
+<a href="https://github.com/slovink/terraform-aws-iam-role/blob/vinod/LICENSE">
   <img src="https://img.shields.io/badge/License-APACHE-blue.svg" alt="Licence">
 </a>
 
 
 
+</p>
+<p align="center">
 
+<a href='https://www.facebook.com/Slovink.in=https://github.com/slovink/terraform-iam-rple'>
+  <img title="Share on Facebook" src="https://user-images.githubusercontent.com/50652676/62817743-4f64cb80-bb59-11e9-90c7-b057252ded50.png" />
+</a>
+<a href='https://www.linkedin.com/company/101534993/admin/feed/posts/=https://github.com/slovink/terraform-iam-role'>
+  <img title="Share on LinkedIn" src="https://user-images.githubusercontent.com/50652676/62817742-4e339e80-bb59-11e9-87b9-a1f68cae1049.png" />
+</a>
+
+
+
+- [Introduction](#introduction)
+- [Usage](#usage)
+- [Module Inputs](#module-inputs)
+- [Module Outputs](#module-outputs)
+- [Examples](#examples)
+- [License](#license)
+
+
+## Introduction
+
+This module is designed for peering two Amazon Virtual Private Clouds (VPCs) using AWS infrastructure. It provides a streamlined way to create a VPC peering connection between two VPCs in the `eu-west-1` region. The module is customizable and can be easily integrated into your Terraform infrastructure.
+
+## Usage
+
+To use this module, you should have Terraform installed and configured for AWS. This module provides the necessary Terraform configuration for creating AWS resources, and you can customize the inputs as needed. Below is an example of how to use this module## examples
 
 
 ## Prerequisites
@@ -33,31 +59,62 @@ This module has a few dependencies:
 
 
 
-
-
-
 ## Examples
 
+**IMPORTANT:** Since the `master` branch used in `source` varies based on new modifications, we suggest that you use the release versions [here](https://github.com/slovink/terraform-aws-iam-role/tree/vinod/_example).
 
-**IMPORTANT:** Since the `master` branch used in `source` varies based on new modifications, we suggest that you use the release versions [here](https://github.com/slovink/terraform-aws-iam-role/releases).
+
+## License
+This Terraform module is provided under the '[License Name]' License. Please see the [LICENSE](https://github.com/slovink/terraform-aws-iam-role/blob/vinod/LICENSE) file for more details.
+
+## Author
+Your Name
+Replace '[License Name]' and '[Your Name]' with the appropriate license and your information. Feel free to expand this README with additional details or usage instructions as needed for your specific use case.
+
 
 
 ### Simple Example
 Here is an example of how you can use this module in your inventory structure:
   ```hcl
 
-module "iam-role" {
-  source = "./../"
-
-  name        = "iam"
-  environment = "test"
-  label_order = ["environment", "name"]
-
-  assume_role_policy = data.aws_iam_policy_document.default.json
-
-  policy_enabled = true
-  policy         = data.aws_iam_policy_document.iam-policy.json
-}
+    module "iam-role" {
+      source             = "https://github.com/slovink/terraform-aws-iam-role.git?ref=v1.0.0"
+      name               = "iam"
+      environment        = "test"
+      assume_role_policy = data.aws_iam_policy_document.default.json
+      policy_enabled     = true
+      policy             = data.aws_iam_policy_document.iam-policy.json
+    }
+    
+    ##-----------------------------------------------------------------------------
+    ## Data block to create IAM policy.
+    ##-----------------------------------------------------------------------------
+    data "aws_iam_policy_document" "default" {
+      statement {
+        effect  = "Allow"
+        actions = ["sts:AssumeRole"]
+        principals {
+          type        = "Service"
+          identifiers = ["ec2.amazonaws.com"]
+        }
+      }
+    }
+    
+    ##-----------------------------------------------------------------------------
+    ## Data block to create IAM policy.
+    ##-----------------------------------------------------------------------------
+    data "aws_iam_policy_document" "iam-policy" {
+      statement {
+        actions = [
+          "ssm:UpdateInstanceInformation",
+          "ssmmessages:CreateControlChannel",
+          "ssmmessages:CreateDataChannel",
+          "ssmmessages:OpenControlChannel",
+          "ssmmessages:OpenDataChannel"]
+        effect    = "Allow"
+        resources = ["*"]
+      }
+    }
 
   ```
 

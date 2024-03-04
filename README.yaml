@@ -1,0 +1,85 @@
+#
+# This is the canonical configuration for the `README.md`
+# Run `make readme` to rebuild the `README.md`
+#
+
+# Name of this project
+name : Terraform IAM-ROLE
+
+# License of this project
+license: "APACHE"
+
+# Canonical GitHub repo
+github_repo: https://github.com/slovink/terraform-aws-iam-role.git
+
+
+# Badges to display
+badges:
+  - name: "Terraform"
+    image: "https://img.shields.io/badge/Terraform-v1.7.0-green"
+    url: "https://www.terraform.io"
+  - name: "Licence"
+    image: "https://img.shields.io/badge/License-APACHE-blue.svg"
+    url: "https://github.com/slovink/terraform-aws-iam-role/blob/vinod/LICENSE"
+  - name: "tfsec"
+    image: "https://github.com/slovink/terraform-aws-vpc/actions/workflows/tfsec.yml/badge.svg"
+    url: "https://github.com/slovink/terraform-aws-iam-role/tree/vinod/.github/workflows/tfsec.yml"
+
+
+
+#  description of this project
+description: |-
+  This terraform module is designed to generate consistent label names and tags for resources. You can use terraform-vpc to implement a strict naming convention.
+
+
+# extra content
+include:
+  - "terraform.md"
+# How to use this project
+usage : |-
+
+  ### Simple Example
+  Here is an example of how you can use this module in your inventory structure:
+  ```hcl
+    module "iam-role" {
+      source             = "https://github.com/slovink/terraform-aws-iam-role.git?ref=v1.0.0"
+      name               = "iam"
+      environment        = "test"
+      assume_role_policy = data.aws_iam_policy_document.default.json
+      policy_enabled     = true
+      policy             = data.aws_iam_policy_document.iam-policy.json
+    }
+  
+    ##-----------------------------------------------------------------------------
+    ## Data block to create IAM policy.
+    ##-----------------------------------------------------------------------------
+    data "aws_iam_policy_document" "default" {
+      statement {
+        effect  = "Allow"
+        actions = ["sts:AssumeRole"]
+        principals {
+          type        = "Service"
+          identifiers = ["ec2.amazonaws.com"]
+        }
+      }
+    }
+  
+    ##-----------------------------------------------------------------------------
+    ## Data block to create IAM policy.
+    ##-----------------------------------------------------------------------------
+    data "aws_iam_policy_document" "iam-policy" {
+      statement {
+        actions = [
+          "ssm:UpdateInstanceInformation",
+          "ssmmessages:CreateControlChannel",
+          "ssmmessages:CreateDataChannel",
+          "ssmmessages:OpenControlChannel",
+          "ssmmessages:OpenDataChannel"]
+        effect    = "Allow"
+        resources = ["*"]
+      }
+    }
+
+
+   ```
+
