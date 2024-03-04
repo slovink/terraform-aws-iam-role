@@ -85,7 +85,7 @@ Here is an example of how you can use this module in your inventory structure:
       policy_enabled     = true
       policy             = data.aws_iam_policy_document.iam-policy.json
     }
-    
+
     ##-----------------------------------------------------------------------------
     ## Data block to create IAM policy.
     ##-----------------------------------------------------------------------------
@@ -99,7 +99,7 @@ Here is an example of how you can use this module in your inventory structure:
         }
       }
     }
-    
+
     ##-----------------------------------------------------------------------------
     ## Data block to create IAM policy.
     ##-----------------------------------------------------------------------------
